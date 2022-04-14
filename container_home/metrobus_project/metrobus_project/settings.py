@@ -111,9 +111,9 @@ REST_FRAMEWORK = {
 
 #Swagger settings
 SPECTACULAR_SETTINGS = {
-    'TITLE': 'Your Project API',
-    'DESCRIPTION': 'Your project description',
-    'VERSION': '1.0.0',
+    'TITLE': 'Metrobus Location API REST',
+    'DESCRIPTION': 'Ubicación por posición y/o alcaldía de las unidades del metrobús de CDMX.',
+    'VERSION': '0.0.1',
     'SERVE_INCLUDE_SCHEMA': False,
 }
 
