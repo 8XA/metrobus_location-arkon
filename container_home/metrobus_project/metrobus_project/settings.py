@@ -42,6 +42,9 @@ INSTALLED_APPS = [
     #Third party apps
     'rest_framework',
     'drf_spectacular',
+
+    #Project apps
+    'location_app',
 ]
 
 MIDDLEWARE = [
