@@ -1,3 +1,4 @@
+from rest_framework.viewsets import ViewSet
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -33,7 +34,27 @@ class AvailableLocalities(APIView):
 
 
 class UnitsInLocality(APIView):
-    pass
+    """
+    This View returns the list of the available units in the locality specified
+    by the URL.
+    The URL parameter is case insensitive, but you must pass accents and dots
+    through itself.
+    """
+    def get(self, request, alcaldia=''):
+        availables = UnidadesModel.objects.filter(alcaldia__iexact=alcaldia) 
+        serializer = UnidadesSerializer(availables, many=True)
+       
+        locality = alcaldia
+        if len(serializer.data) > 0:
+            locality = serializer.data[0]['alcaldia']
+        try:
+            units_in_locality = [unit['label'] for unit in serializer.data]
+        except:
+            units_in_locality = []
+        available_units = {
+                'Units in {}'.format(locality): units_in_locality
+            }
+        return Response(available_units, status=status.HTTP_201_CREATED)
 
 
 class FetchData(APIView):
