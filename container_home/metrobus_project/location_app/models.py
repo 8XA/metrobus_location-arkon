@@ -8,11 +8,11 @@ class UnidadesModel(models.Model):
     """
 
     #Works as an ID
-    label = models.IntegerField(unique=True, primary_key=True)
+    label = models.IntegerField(primary_key=True)
     
     #Position
-    latitude = models.IntegerField()
-    longitude = models.IntegerField()
+    latitude = models.DecimalField(max_digits=30, decimal_places=25)
+    longitude = models.DecimalField(max_digits=30, decimal_places=25)
 
     #Locality name
     alcaldia = models.TextField()
