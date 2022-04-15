@@ -17,6 +17,10 @@ class UnidadesModel(models.Model):
     #Locality name
     alcaldia = models.TextField()
 
+    #Query date in the CDMX API
+    updated = models.DateTimeField(auto_now=True)
+
+
     class Meta:
         #Table name
         db_table = "Unidades"
@@ -27,6 +31,6 @@ class UnidadesModel(models.Model):
         #Names for the admin panel
         verbose_name = "Unidad"
         verbose_name_plural = "Unidades"
-
+        
     def __str__(self):
         return 'Unidad {} en {}'.format(self.label, self.alcaldia)
