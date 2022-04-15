@@ -24,17 +24,34 @@ class UnitsInLocality(APIView):
 
 
 class FetchData(APIView):
+    """
+    This View adds or updates the microbuses units information in the database.
+    It just need to be called by their Endpoint.
+    """
     
     def get(self, request):
-
+        #Gets a list of the units with their information
         data = get_units_information()
-        serializer = UnidadesSerializer(data=data, many=True)
+    
+        serializer_data_sum = []
+        #The units are added or updated one by one, because the action
+        #can be different for each case.
+        for unit in data:
+            try:
+                filtered_units = UnidadesModel.objects.filter(label=unit['label'])
+                if len(filtered_units) == 0:
+                    serializer = UnidadesSerializer(data=unit)
+                else:
+                    serializer = UnidadesSerializer(filtered_units[0], data=unit)
 
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-
-    def __update(self, request):
-        pass
+                if serializer.is_valid():
+                    serializer.save()
+                    serializer_data_sum.append(serializer.data)
+            except:
+                return Response("Los datos a registrar son incorrectos.", status=status.HTTP_400_BAD_REQUEST)
+        
+        #Return info
+        serializer_data_sum.insert(0, 'Número de unidades insertadas/actualizadas: {}'.format(len(serializer_data_sum)))
+        
+        return Response(serializer_data_sum, status=status.HTTP_201_CREATED)
 
