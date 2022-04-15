@@ -1,0 +1,41 @@
+version: "3.7"
+
+services:
+
+    db:
+
+      image: postgres:14.2
+
+      volumes:
+        - ./container_home/database:/var/lib/postgresql/data
+
+      environment:
+        - POSTGRES_DB=postgres
+        - POSTGRES_USER=postgres
+        - POSTGRES_PASSWORD=postgres
+
+    web:
+      build: .
+        #image: metrobus:v0.0.1
+
+        #      command: sh -c "
+        #        pip install -r requirements.txt &&
+        #        python metrobus_project/manage.py makemigrations &&
+        #        python metrobus_project/manage.py migrate &&
+        #        python metrobus_project/manage.py runserver 0.0.0.0:8000
+        #        "
+      command: python metrobus_project/manage.py runserver 0.0.0.0:8000
+
+      ports:
+        - 8000:8000
+
+      volumes:
+        - ./container_home/:/home/metrobus_location_api
+
+      environment:
+        - POSTGRES_DB=postgres
+        - POSTGRES_USER=postgres
+        - POSTGRES_PASSWORD=postgres
+
+      depends_on:
+        - db
