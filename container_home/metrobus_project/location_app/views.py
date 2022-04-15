@@ -26,7 +26,22 @@ class AvailableUnits(APIView):
 
 
 class UnitLocation(APIView):
-    pass
+    """
+    This View returns a JSON with the location of the unit specified by the URL parameter.
+    The location is given by the longitude and the latitude, also by the locality.
+    The URL parameter has to be an integer number which is the ID/label of the unit.
+    """
+    def get(self, request, label):
+        try:
+            unit = UnidadesModel.objects.get(label=label)
+            serializer = UnidadesSerializer(unit)
+
+            only_location = serializer.data.copy()
+            only_location.pop('updated')
+            
+            return Response(only_location, status=status.HTTP_201_CREATED)
+        except:
+            return Response("ID de unidad inexistente.", status=status.HTTP_400_BAD_REQUEST)
 
 
 class AvailableLocalities(APIView):
