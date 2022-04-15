@@ -9,7 +9,7 @@ urlpatterns = [
     #GET: Unit location
     path('ubicacion-de-unidad/<int:label>', views.UnitLocation.as_view(), name='unit_location'),
     #GET: Available localities
-    path('alcaldias-dosponibles', views.AvailableLocalities.as_view(), name='available_locality'),
+    path('alcaldias-disponibles', views.AvailableLocalities.as_view(), name='available_locality'),
     #GET: Units inside a locality
     path('unidades-en-alcaldia', views.UnitsInLocality.as_view(), name='units_in_locality'),
     #POST: Load data with pipeline into the database
