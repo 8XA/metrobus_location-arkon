@@ -8,7 +8,20 @@ from location_app.microbuses_information import get_units_information
 
 
 class AvailableUnits(APIView):
-    pass
+    """
+    This View returns a JSON with the labels of the available units.
+    """
+    def get(self, request):
+        availables = UnidadesModel.objects.all() 
+        serializer = UnidadesSerializer(availables, many=True)
+        try:
+            units_list = [unit['label'] for unit in serializer.data]
+        except:
+            units_list = []
+        available_units = {
+                "available_units": units_list
+            }
+        return Response(available_units, status=status.HTTP_201_CREATED)
 
 
 class UnitLocation(APIView):
