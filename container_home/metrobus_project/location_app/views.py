@@ -45,7 +45,19 @@ class UnitLocation(APIView):
 
 
 class AvailableLocalities(APIView):
-    pass
+    """
+    This View returns the list of the available localities.
+    It no need parameters.
+    """
+    def get(self, request):
+        try:
+            availables = UnidadesModel.objects.all()
+            serializer = UnidadesSerializer(availables, many=True)
+            localities_list = list(set([unit['alcaldia'] for unit in serializer.data]))
+            ordered_localities = sorted(localities_list, key=str.casefold)
+        except:
+            ordered_localities = []
+        return Response({"Available localities": ordered_localities}, status=status.HTTP_201_CREATED)
 
 
 class UnitsInLocality(APIView):
