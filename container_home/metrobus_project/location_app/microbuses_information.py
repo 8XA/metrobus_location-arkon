@@ -3,13 +3,15 @@ from json import dumps
 from threading import Thread
 
 
-data = []
-
 def get_units_information():
     """
     This function returns an array with all the microbuses units information from two APIs.
     Doesn't need parameters.
     """
+
+    #Created/Updated units
+    global data
+    data = []
 
     #Gets the microbuses information provided by the CDMX API.
     #This information is outdated, then this is just an example.
