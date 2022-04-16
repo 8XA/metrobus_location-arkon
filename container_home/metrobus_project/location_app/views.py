@@ -22,7 +22,7 @@ class AvailableUnits(APIView):
         available_units = {
                 "available_units": units_list
             }
-        return Response(available_units, status=status.HTTP_201_CREATED)
+        return Response(available_units, status=status.HTTP_200_OK)
 
 
 class UnitLocation(APIView):
@@ -39,9 +39,9 @@ class UnitLocation(APIView):
             only_location = serializer.data.copy()
             only_location.pop('updated')
             
-            return Response(only_location, status=status.HTTP_201_CREATED)
+            return Response(only_location, status=status.HTTP_200_OK)
         except:
-            return Response("ID de unidad inexistente.", status=status.HTTP_400_BAD_REQUEST)
+            return Response("ID de unidad inexistente.", status=status.HTTP_404_NOT_FOUND)
 
 
 class AvailableLocalities(APIView):
@@ -57,23 +57,26 @@ class AvailableLocalities(APIView):
             ordered_localities = sorted(localities_list, key=str.casefold)
         except:
             ordered_localities = []
-        return Response({"Available localities": ordered_localities}, status=status.HTTP_201_CREATED)
+        return Response({"Available localities": ordered_localities}, status=status.HTTP_200_OK)
 
 
 class UnitsInLocality(APIView):
     """
     This View returns the list of the available units in the locality specified
     by the URL.
-    The URL parameter is case insensitive, but you must pass accents and dots
-    through itself.
+    The URL parameter is case insensitive, but you must pass accents, dots and
+    spaces through itself.
     """
-    def get(self, request, alcaldia=''):
+    def get(self, request, alcaldia):
         availables = UnidadesModel.objects.filter(alcaldia__iexact=alcaldia) 
         serializer = UnidadesSerializer(availables, many=True)
        
         locality = alcaldia
         if len(serializer.data) > 0:
             locality = serializer.data[0]['alcaldia']
+        else:
+            return Response('En estos momentos no hay registros para {}.'.format(alcaldia), 
+                    status=status.HTTP_404_NOT_FOUND)
         try:
             units_in_locality = [unit['label'] for unit in serializer.data]
         except:
@@ -81,7 +84,7 @@ class UnitsInLocality(APIView):
         available_units = {
                 'Units in {}'.format(locality): units_in_locality
             }
-        return Response(available_units, status=status.HTTP_201_CREATED)
+        return Response(available_units, status=status.HTTP_200_OK)
 
 
 class FetchData(APIView):
