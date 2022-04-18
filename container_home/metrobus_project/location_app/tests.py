@@ -3,6 +3,8 @@ from location_app.models import UnidadesModel
 from location_app.views import AvailableUnits
 from location_app.views import AvailableLocalities
 from location_app.views import UnitLocation
+from location_app.views import UnitsInLocality
+
 
 class LocationAppTest(TestCase):
     #Test for the AvailableUnits View
@@ -55,5 +57,18 @@ class LocationAppTest(TestCase):
         assert get_method.status_text == 'OK'
 
     def test_units_in_locality(self):
-        pass
+        view_instance = UnitsInLocality()
+        ALCALDIA = 'Iztapalapa'
+        get_method = view_instance.get(None, ALCALDIA)
 
+        if len(UnidadesModel.objects.filter(alcaldia=ALCALDIA)) == 0:
+            #Invalid locality
+            assert get_method.status_text == 'Not Found'
+        else:
+            units_list = get_method.data['Units in ' + ALCALDIA]
+            valid_units = [isinstance(unit, int) for unit in units_list]
+            non_repeated_units = list(set(units_list))
+
+            #All units are valid
+            assert all(valid_units)
+            assert  len(non_repeated_units) == len(units_list)
