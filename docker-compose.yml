@@ -3,11 +3,10 @@ version: "3.7"
 services:
 
     db:
-
       image: postgres:14.2
 
       volumes:
-        - ./container_home/database:/var/lib/postgresql/data
+        - ./database:/var/lib/postgresql/data
 
       environment:
         - POSTGRES_DB=postgres
@@ -16,15 +15,11 @@ services:
 
     web:
       build: .
-        #image: metrobus:v0.0.1
 
-        #      command: sh -c "
-        #        pip install -r requirements.txt &&
-        #        python metrobus_project/manage.py makemigrations &&
-        #        python metrobus_project/manage.py migrate &&
-        #        python metrobus_project/manage.py runserver 0.0.0.0:8000
-        #        "
-      command: python metrobus_project/manage.py runserver 0.0.0.0:8000
+      command: sh -c "
+        python manage.py migrate &&
+        python manage.py runserver 0.0.0.0:8000
+        "
 
       ports:
         - 8000:8000
