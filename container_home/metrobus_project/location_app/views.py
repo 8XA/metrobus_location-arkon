@@ -2,6 +2,7 @@ from rest_framework.viewsets import ViewSet
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from drf_spectacular.utils import extend_schema
 
 from location_app.models import UnidadesModel
 from location_app.serializers import UnidadesSerializer
@@ -12,6 +13,7 @@ class AvailableUnits(APIView):
     """
     This View returns a JSON with the labels of the available units.
     """
+    @extend_schema(request=None, responses=UnidadesSerializer)
     def get(self, request):
         availables = UnidadesModel.objects.all() 
         serializer = UnidadesSerializer(availables, many=True)
@@ -31,6 +33,7 @@ class UnitLocation(APIView):
     The location is given by the longitude and the latitude, also by the locality.
     The URL parameter has to be an integer number which is the ID/label of the unit.
     """
+    @extend_schema(request=None, responses=UnidadesSerializer)
     def get(self, request, label):
         try:
             unit = UnidadesModel.objects.get(label=label)
@@ -49,6 +52,7 @@ class AvailableLocalities(APIView):
     This View returns the list of the available localities.
     It no need parameters.
     """
+    @extend_schema(request=None, responses=UnidadesSerializer)
     def get(self, request):
         try:
             availables = UnidadesModel.objects.all()
@@ -67,6 +71,7 @@ class UnitsInLocality(APIView):
     The URL parameter is case insensitive, but you must pass accents, dots and
     spaces through itself.
     """
+    @extend_schema(request=None, responses=UnidadesSerializer)
     def get(self, request, alcaldia):
         availables = UnidadesModel.objects.filter(alcaldia__iexact=alcaldia) 
         serializer = UnidadesSerializer(availables, many=True)
@@ -93,6 +98,7 @@ class FetchData(APIView):
     It just need to be called by their Endpoint.
     """
     
+    @extend_schema(request=None, responses=UnidadesSerializer)
     def get(self, request):
         #Gets a list of the units with their information
         data = get_units_information()
