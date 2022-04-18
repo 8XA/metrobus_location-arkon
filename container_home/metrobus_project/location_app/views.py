@@ -20,7 +20,7 @@ class AvailableUnits(APIView):
         except:
             units_list = []
         available_units = {
-                "available_units": units_list
+                "Available units": units_list
             }
         return Response(available_units, status=status.HTTP_200_OK)
 

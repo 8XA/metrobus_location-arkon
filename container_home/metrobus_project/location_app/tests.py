@@ -1,7 +1,7 @@
-#from django.test import TestCase
 from unittest import TestCase
 from location_app.models import UnidadesModel
 from location_app.views import AvailableUnits
+from location_app.views import AvailableLocalities
 from location_app.views import UnitLocation
 
 class LocationAppTest(TestCase):
@@ -9,7 +9,7 @@ class LocationAppTest(TestCase):
     def test_available_units(self):
         view_instance = AvailableUnits()
         get_method = view_instance.get(None)
-        units_list = get_method.data['available_units']
+        units_list = get_method.data['Available units']
         units_validation = [isinstance(unit, int) for unit in units_list]  
         non_repeated_units = list(set(units_list))
 
@@ -17,7 +17,7 @@ class LocationAppTest(TestCase):
         assert all(units_validation)
         #Every unit ID is unique
         assert len(units_list) == len(non_repeated_units)
-        #MEthod return 200 OK status
+        #Method return 200 OK status
         assert get_method.status_text == 'OK'
 
     def test_unit_location(self):
@@ -40,8 +40,20 @@ class LocationAppTest(TestCase):
             assert get_method.status_text == 'Not Found'
     
     def test_available_localities(self):
-        pass
+        view_instance = AvailableLocalities()
+        get_method = view_instance.get(None)
     
+        localities_list = get_method.data['Available localities']
+        localities_validation = [isinstance(locality, str) for locality in localities_list]  
+        non_repeated_localities = list(set(localities_list))
+
+        #All the localities are strings
+        assert all(localities_validation)
+        #Every unit locality is unique
+        assert len(localities_list) == len(non_repeated_localities)
+        #Method return 200 OK status
+        assert get_method.status_text == 'OK'
+
     def test_units_in_locality(self):
         pass
 
